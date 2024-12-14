@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/tokens/initial
+Content-Type: application/json
+
+
+{
+  "email": "qweqwe@qweqwe",
+  "password": "qweqwe"
+}

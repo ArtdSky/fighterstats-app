@@ -11,6 +11,14 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{ __("You're logged in!") }}
                 </div>
+                <div class="p-6">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full bg-red-500 text-black font-bold py-2 rounded hover:bg-red-600">
+                            Выйти
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
