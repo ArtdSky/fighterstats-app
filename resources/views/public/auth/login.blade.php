@@ -2,6 +2,7 @@
     <div class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white shadow-md rounded-lg p-8 w-96">
             <h2 class="text-2xl font-bold text-center mb-6">Вход</h2>
+
             <form action="{{ route('login') }}" method="POST">
                 @csrf
                 <div class="mb-4">
@@ -20,10 +21,15 @@
                     <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="mb-4">
+                    <input type="checkbox" name="remember" id="remember" class="mr-2">
+                    <label for="remember" class="text-sm text-gray-700">Запомнить меня</label>
+                </div>
                 <button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600">
                     Войти
                 </button>
             </form>
+
             <p class="mt-4 text-center">Нет аккаунта? <a href="{{ route('register') }}"
                                                          class="text-blue-500 hover:underline">Зарегистрироваться</a>
             </p>

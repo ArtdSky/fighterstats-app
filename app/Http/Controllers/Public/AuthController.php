@@ -3,68 +3,54 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\Public\LoginRequest;
+use App\Http\Requests\Public\RegisterRequest;
+use App\Repositories\UserRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showRegistrationForm()
+    private UserRepository $userRepository;
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    public function showRegistrationForm(): View
     {
         return view('public.auth.register');
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        $data = $request->validated();
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        $this->userRepository->create($data);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-            'email_verified_at' => null,
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->route('home')->with('success', 'Registration successful!');
+        return redirect()->route('login');
     }
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('public.auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        $data = $request->validated();
+        $remember = $request->has('remember');
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($data, $remember)) {
             return redirect()->route('home')->with('success', 'Login successful!');
         }
 
         return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         Auth::logout();
         return redirect()->route('login')->with('success', 'Logout successful!');

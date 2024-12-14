@@ -1,0 +1,12 @@
+POST http://localhost:8080/api/tokens/create
+Content-Type: application/json
+Authorization: Bearer O8VD8420H2KEPZoWcfmRpEw2P2oYadvhZaH06lml712d5bab
+
+{
+  "token_name": "Testing"
+}
+
+
+
+
+
